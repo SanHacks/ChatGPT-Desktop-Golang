@@ -28,8 +28,8 @@ func main() {
 
 	// add chat bubbles to the message box
 	messageCall := makeApiCall()
-	addChatBubble(messageBox, "Hello there!", false)
-	addChatBubble(messageBox, messageCall, true)
+	addChatBubble(messageBox, "YOU: I am looking for a quote", false)
+	addChatBubble(messageBox, "Bot: "+messageCall, true)
 
 	// create a send button for sending messages
 	sendButton := widget.NewButtonWithIcon("", theme.MailSendIcon(), func() {
@@ -38,10 +38,10 @@ func main() {
 		fmt.Println(message)
 		if message != "" {
 			// send message
-			addChatBubble(messageBox, message, false)
+			addChatBubble(messageBox, "YOU: "+message, false)
 			inputBox.SetText("")
 			messageCall := makeApiCall()
-			addChatBubble(messageBox, messageCall, true)
+			addChatBubble(messageBox, "Bot: "+messageCall, true)
 
 		}
 	})
@@ -100,5 +100,6 @@ func makeApiCall() string {
 		return ""
 	}
 	fmt.Println(string(body))
-	return string(body)
+	return string(body[1 : len(body)-1])
+
 }
