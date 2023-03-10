@@ -6,6 +6,7 @@ import (
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
+	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 	"io"
 	"io/ioutil"
@@ -14,45 +15,59 @@ import (
 
 func main() {
 	myApp := app.New()
-	myWindow := myApp.NewWindow("Chat App")
+	myWindow := myApp.NewWindow("Sage Chatbot")
+	myWindow.Resize(fyne.NewSize(1200, 1200))
 
-	// create a scrollable text area for displaying messages
-	messageBox := widget.NewMultiLineEntry()
-	messageBox.Wrapping = fyne.TextWrapWord
-	messageBox.Resize(fyne.NewSize(1200, 1200))
+	// create a scrollable chat bubble for displaying messages
+	messageBox := container.NewVBox()
 
 	// create a text input field for users to enter their messages
-	inputBox := widget.NewEntry()
-	inputBox.Resize(fyne.NewSize(1200, 50))
+	inputBox := widget.NewMultiLineEntry()
+	inputBox.Wrapping = fyne.TextWrapWord
+	inputBox.PlaceHolder = "Enter your message here..."
 
-	// create a button for sending messages
-	sendButton := widget.NewButton("Prompt", func() {
+	// add chat bubbles to the message box
+	messageCall := makeApiCall()
+	addChatBubble(messageBox, "Hello there!", false)
+	addChatBubble(messageBox, messageCall, true)
+
+	// create a send button for sending messages
+	sendButton := widget.NewButtonWithIcon("", theme.MailSendIcon(), func() {
 		message := inputBox.Text
-		// add the user's message to the message box
-		messageBox.SetText(messageBox.Text + "You: " + message + "\n")
-		// TODO: send the message to the chatbot and get a response
-		// add the chatbot's response to the message box
-		response := makeApiCall()
+		//increase width of input box
+		fmt.Println(message)
+		if message != "" {
+			// send message
+			addChatBubble(messageBox, message, false)
+			inputBox.SetText("")
+			messageCall := makeApiCall()
+			addChatBubble(messageBox, messageCall, true)
 
-		messageBox.SetText(messageBox.Text + "Chatbot: " + response + "\n")
-		// clear the input field
-		inputBox.SetText("")
+		}
 	})
 
 	// create a horizontal box for the input field and send button
-	inputContainer := container.NewHBox(inputBox, sendButton)
-	inputContainer.Layout = layout.NewMaxLayout()
+	inputBoxContainer := container.NewVSplit(inputBox, sendButton)
+	inputBoxContainer.Size()
+	// create a vertical box for the message box and input field/send button
+	content := container.NewVBox(messageBox, layout.NewSpacer(), inputBoxContainer)
 
-	// create a vertical box for the message box and input box/button
-	chatContainer := container.NewVBox(
-		messageBox,
-		inputContainer,
-	)
-	chatContainer.Resize(fyne.NewSize(400, 500))
-
-	// set the chat container as the content of the window and show it
-	myWindow.SetContent(chatContainer)
+	// set the content of the window and show it
+	myWindow.SetContent(content)
+	myWindow.CenterOnScreen()
 	myWindow.ShowAndRun()
+}
+
+func addChatBubble(box *fyne.Container, message string, isUser bool) {
+	// create a new label with the message
+	label := widget.NewLabel(message)
+
+	// create a new chat bubble with the label
+	bubble := container.NewHBox(label)
+	bubble.Resize(fyne.NewSize(1000, 500))
+
+	// add the chat bubble to the message box
+	box.Add(bubble)
 }
 
 func makeApiCall() string {

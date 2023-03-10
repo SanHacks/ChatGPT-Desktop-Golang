@@ -1,4 +1,4 @@
-module ludo
+module sagechat
 
 go 1.20
 
