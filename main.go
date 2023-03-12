@@ -63,6 +63,7 @@ func main() {
 			}
 			if addMessage != nil {
 				log.Printf("Error adding bot message: %v", addMessage)
+
 			}
 
 		}
