@@ -2,7 +2,10 @@ module sagechat
 
 go 1.20
 
-require fyne.io/fyne/v2 v2.3.1
+require (
+	fyne.io/fyne/v2 v2.3.1
+	github.com/mattn/go-sqlite3 v1.14.16
+)
 
 require (
 	fyne.io/systray v1.10.1-0.20230207085535-4a244dbb9d03 // indirect

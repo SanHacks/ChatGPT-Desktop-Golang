@@ -15,10 +15,10 @@ import (
 )
 
 func main() {
-	err := createDatabase()
-	if err != nil {
-		log.Printf("Error creating database: %v", err)
-	}
+	//err := createDatabase()
+	//if err != nil {
+	//	log.Printf("Error creating database: %v", err)
+	//}
 	myApp := app.New()
 	myWindow := myApp.NewWindow("Sage Chatbot")
 	myWindow.Resize(fyne.NewSize(1200, 1200))
@@ -32,6 +32,15 @@ func main() {
 	inputBox.PlaceHolder = "Enter your message here..."
 
 	// add chat bubbles to the message box
+	messages, err := getMessages()
+	if err != nil {
+		log.Printf("Error getting messages: %v", err)
+	}
+
+	for _, message := range messages {
+		addChatBubble(messageBox, message.Sender+": "+message.Content, message.Sender == "Bot")
+	}
+
 	messageCall := makeApiCall()
 	addChatBubble(messageBox, "YOU: I am looking for a quote", false)
 	addChatBubble(messageBox, "Bot: "+messageCall, true)
@@ -43,10 +52,18 @@ func main() {
 		fmt.Println(message)
 		if message != "" {
 			// send message
+			addUserMessage := addMessage("YOU", message)
 			addChatBubble(messageBox, "YOU: "+message, false)
 			inputBox.SetText("")
 			messageCall := makeApiCall()
 			addChatBubble(messageBox, "Bot: "+messageCall, true)
+			addMessage := addMessage("Bot", messageCall)
+			if addUserMessage != nil {
+				log.Printf("Error adding user message: %v", addUserMessage)
+			}
+			if addMessage != nil {
+				log.Printf("Error adding bot message: %v", addMessage)
+			}
 
 		}
 	})

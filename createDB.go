@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	_ "github.com/mattn/go-sqlite3"
+	"log"
 )
 
 func createDatabase() error {
@@ -13,6 +14,13 @@ func createDatabase() error {
 	}
 	defer db.Close()
 
+	//check if the database exists
+	//if it does, return
+	//if it doesn't, create it
+
+	if db == nil {
+		log.Println("Database does not exist")
+	}
 	// Execute the SQL command to create the table
 	_, err = db.Exec(`
         CREATE TABLE messages (
@@ -25,6 +33,7 @@ func createDatabase() error {
 	if err != nil {
 		return err
 	}
+	log.Printf("Database created successfully")
 
 	return nil
 }
