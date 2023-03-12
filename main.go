@@ -10,10 +10,15 @@ import (
 	"fyne.io/fyne/v2/widget"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 )
 
 func main() {
+	err := createDatabase()
+	if err != nil {
+		log.Printf("Error creating database: %v", err)
+	}
 	myApp := app.New()
 	myWindow := myApp.NewWindow("Sage Chatbot")
 	myWindow.Resize(fyne.NewSize(1200, 1200))
