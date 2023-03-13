@@ -5,6 +5,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 	"io"
@@ -129,6 +130,10 @@ func main() {
 	platform.SetOnClosed(func() {
 		fmt.Println("Closed")
 	})
+	scroll := container.NewVScroll(tabs)
+	scroll.SetMinSize(tabs.MinSize())
+	// Add the ScrollContainer to the main window
+	platform.SetContent(scroll)
 	//add side menu
 	platform.SetMainMenu(fyne.NewMainMenu(
 		fyne.NewMenu("File",
@@ -216,13 +221,37 @@ func main() {
 	platform.ShowAndRun()
 }
 
+// Create a new label with the message and add it to the chat window
+// The isUser parameter determines if the message is from the user or the bot
+// If the message is from the user, the bubble will be on the right side of the chat window
+// If the message is from the bot, the bubble will be on the left side of the chat window
 func addChatBubble(box *fyne.Container, message string, isUser bool) {
-	// Create a new label with the message
+
 	label := widget.NewLabel(message)
+	label.Wrapping = fyne.TextWrapWord
 	// Create a new chat bubble with the label
 	bubble := container.NewHBox(label)
-	// Add the chat bubble to the message box
-	box.Add(bubble)
+
+	// Set a random background color for the bubble
+	//color := color.RGBA{R: uint8(rand.Intn(256)), G: uint8(rand.Intn(256)), B: uint8(rand.Intn(256)), A: 255}
+	label.TextStyle = fyne.TextStyle{Bold: false, Italic: false, Monospace: false}
+
+	// Add the chat bubble to the card
+	if isUser {
+		// If the message is from the user, add the bubble to the right side of the card
+		box.Add(container.NewHBox(
+			layout.NewSpacer(),
+			widget.NewCard("", "", bubble),
+		))
+	} else {
+		// If the message is from someone else, add the bubble to the left side of the card
+		box.Add(container.NewHBox(
+			widget.NewCard("", "", bubble),
+			layout.NewSpacer(),
+		))
+	}
+	// Wrap the container with a ScrollContainer to enable scrolling
+
 }
 
 func makeApiCall() string {
