@@ -27,12 +27,9 @@ jobs:
       run: go mod vendor
     - name: Verify Dependencies Origination
       run: go mod verify
-    - name: Clean up for build
-      run: go mod tidy
     - name: Build Platform
-      run: go build -v ./...
-
+      run: go build -o sagacity
     - name: Test Chat Platform
-      run: go test -v ./...
+      run: go test
     - name: Last Check
       run: go mod why
