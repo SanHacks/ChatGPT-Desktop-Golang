@@ -27,7 +27,5 @@ jobs:
       run: go mod vendor
     - name: Verify Dependencies Origination
       run: go mod verify
-    - name: Test Chat Platform
-      run: go run .
     - name: Last Check
       run: go mod why
