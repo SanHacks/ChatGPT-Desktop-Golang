@@ -22,13 +22,24 @@ func main() {
 	//}
 	myApp := app.New()
 	platform := myApp.NewWindow("Sage Chatbot")
-	platform.Resize(fyne.NewSize(1200, 1200))
+	myApp.Settings().SetTheme(theme.DarkTheme())
+	platform.Resize(fyne.Size{
+		Width:  500,
+		Height: 500,
+	})
 	platform.SetFixedSize(false)
 	platform.MainMenu()
-	platform.SetMaster()
-	messageBox := container.NewVBox()
 
-	// Create a text input field for users to enter their messages
+	platform.SetMaster()
+	platform.SetOnClosed(func() {
+		fmt.Println("Closed")
+	})
+	messageBox := container.NewVBox()
+	messageBox.Resize(fyne.Size{
+		Width:  0,
+		Height: 0,
+	})
+
 	inputBox := widget.NewMultiLineEntry()
 	inputBox.Wrapping = fyne.TextWrapWord
 	inputBox.PlaceHolder = "Enter your message here..."
@@ -79,19 +90,14 @@ func main() {
 
 	// Set the content of the window and show it
 	platform.SetContent(content)
-	platform.CenterOnScreen()
-	platform.Resize(fyne.NewSize(1200, 1200))
 	platform.ShowAndRun()
 }
 
 func addChatBubble(box *fyne.Container, message string, isUser bool) {
 	// Create a new label with the message
 	label := widget.NewLabel(message)
-
 	// Create a new chat bubble with the label
 	bubble := container.NewHBox(label)
-	bubble.Resize(fyne.NewSize(1000, 500))
-
 	// Add the chat bubble to the message box
 	box.Add(bubble)
 }
