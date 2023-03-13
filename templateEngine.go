@@ -24,6 +24,10 @@ func displayConvo(message string, tab1 *fyne.Container, inputBox *widget.Entry) 
 	if message != "" {
 
 		userMessages(message, tab1)
+		addMessages := addMessage("YOU", message)
+		if addMessages != nil {
+			log.Printf("Error adding user message: %v", addMessage)
+		}
 
 		// Clear input box
 		inputBox.SetText("")
@@ -52,7 +56,6 @@ func botMessages(messageCall string, err error, tab1 *fyne.Container) {
 		if len(messageCall) > 90 {
 			voiceNote(messageCall, err)
 		}
-
 		var messageArray []string
 		for i := 0; i < len(messageCall); i += 90 {
 			end := i + 90
