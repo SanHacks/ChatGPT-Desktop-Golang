@@ -8,7 +8,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-// Create a new label with the message and add it to the chat window
+// Create a new label with the message and add it to the chat window.
 // The isUser parameter determines if the message is from the user or the bot
 // If the message is from the user, the bubble will be on the right side of the chat window
 // If the message is from the bot, the bubble will be on the left side of the chat window
@@ -49,26 +49,5 @@ func addChatBubble(box *fyne.Container, message string, isUser bool) {
 			layout.NewSpacer(),
 		))
 	}
-
-	// Create a new audio player widget with the audio file URL
-	//audioPlayer := widget.Audio("source/voice.mp3")
-	//audioPlayer := container.NewAudioPlayer()
-	//audioPlayer.SetPlayer(func() fyne.Resource {
-	//	file, err := fyne.LoadResourceFromPath("source/voice.mp3")
-	//	if err != nil {
-	//		fmt.Println("Error loading audio file:", err)
-	//		return nil
-	//	}
-	//	return file
-	//})
-	//audioPlayer.SetAutoplay(true)
-
-	// Add the audio player to the chat window
-	//box.Add(container.NewHBox(
-	//	layout.NewSpacer(),
-	//	audioPlayer,
-	//))
-
-	// Wrap the container with a ScrollContainer to enable scrolling
 	container.NewScroll(box)
 }

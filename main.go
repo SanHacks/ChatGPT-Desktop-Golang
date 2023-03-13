@@ -26,6 +26,13 @@ func main() {
 	myApp.SetIcon(theme.MailAttachmentIcon())
 
 	tab1 := container.NewVBox()
+	container.NewScroll(tab1)
+	if tab1.Size().IsZero() {
+		tab1.Resize(fyne.Size{
+			Width:  0,
+			Height: 0,
+		})
+	}
 	tab1.Resize(fyne.Size{
 		Width:  0,
 		Height: 0,
@@ -44,7 +51,10 @@ func main() {
 		addChatBubble(tab1, message.Sender+": "+message.Content, message.Sender == "Bot")
 	}
 
-	messageCall := makeApiCall()
+	messageCall, checkError := makeApiCall()
+	if checkError != nil {
+		log.Printf("Error making API call: %v", checkError)
+	}
 	addChatBubble(tab1, "YOU: I am looking for a quote", false)
 	addChatBubble(tab1, "Bot: "+messageCall, true)
 

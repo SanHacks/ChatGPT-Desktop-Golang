@@ -7,7 +7,15 @@ import (
 	"net/http"
 )
 
-func makeApiCall() string {
+// makeApiCall is a function that makes an API call to the Ron Swanson Quote API
+// and returns the quote as a string.
+// The function returns an error if the API call fails.
+// The function returns a string if the API call is successful.
+// The function returns an empty string if the API call is successful but the
+// quote is empty.
+// e.g makeApiCall() (string, error)
+// usage: quote, err := makeApiCall()
+func makeApiCall() (string, error) {
 
 	url := "https://ron-swanson-quotes.herokuapp.com/v2/quotes"
 	method := "GET"
@@ -17,12 +25,12 @@ func makeApiCall() string {
 
 	if err != nil {
 		fmt.Println(err)
-		return ""
+		return "", err
 	}
 	res, err := client.Do(req)
 	if err != nil {
 		fmt.Println(err)
-		return ""
+		return "", err
 	}
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
@@ -34,9 +42,9 @@ func makeApiCall() string {
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		fmt.Println(err)
-		return ""
+		return "", err
 	}
 	fmt.Println(string(body))
-	return string(body[1 : len(body)-1])
+	return string(body[1 : len(body)-1]), nil
 
 }
