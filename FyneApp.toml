@@ -1,0 +1,10 @@
+Website = "https://aigen.azurewebsites.net"
+  Description = "My App is a great app.
+
+[Details]
+  Icon = "https://aigen.azurewebsites.net/generatedProducts/AIGEN_KJEJV.jpg"
+  Name = "My App"
+  ID = "com.example.app"
+  appID = "com.example.app"
+  Version = "1.0.0"
+  Build = 6
