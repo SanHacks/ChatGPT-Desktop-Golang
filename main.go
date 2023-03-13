@@ -5,13 +5,9 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
-	"io"
-	"io/ioutil"
 	"log"
-	"net/http"
 )
 
 func main() {
@@ -22,7 +18,7 @@ func main() {
 	//}
 
 	myApp := app.New()
-	myApp.Settings().PrimaryColor()
+	myApp.Settings().SetTheme(theme.LightTheme())
 	myApp.SendNotification(&fyne.Notification{
 		Title:   "Sage Chatbot",
 		Content: "Welcome to Sage Chatbot",
@@ -34,7 +30,6 @@ func main() {
 		Width:  0,
 		Height: 0,
 	})
-
 	inputBox := widget.NewMultiLineEntry()
 	inputBox.Wrapping = fyne.TextWrapWord
 	inputBox.PlaceHolder = "Enter your message here..."
@@ -53,29 +48,7 @@ func main() {
 	addChatBubble(tab1, "YOU: I am looking for a quote", false)
 	addChatBubble(tab1, "Bot: "+messageCall, true)
 
-	// Create a send button for sending messages
-	sendButton := widget.NewButtonWithIcon("", theme.MailSendIcon(), func() {
-		message := inputBox.Text
-		//Increase width of input box
-		fmt.Println(message)
-		if message != "" {
-			// Send message
-			addUserMessage := addMessage("YOU", message)
-			addChatBubble(tab1, "YOU: "+message, false)
-			inputBox.SetText("")
-			messageCall := makeApiCall()
-			addChatBubble(tab1, "Bot: "+messageCall, true)
-			addMessage := addMessage("Bot", messageCall)
-			if addUserMessage != nil {
-				log.Printf("Error adding user message: %v", addUserMessage)
-			}
-			if addMessage != nil {
-				log.Printf("Error adding bot message: %v", addMessage)
-
-			}
-
-		}
-	})
+	sendButton := sendButton(inputBox, tab1)
 
 	// Create a horizontal box for the input field and send button
 	inputBoxContainer := container.NewVSplit(inputBox, sendButton)
@@ -111,8 +84,8 @@ func main() {
 	// Add the chat list to the tab2 container
 	tab2 := container.NewVBox(chatList)
 	tab2.Resize(fyne.Size{
-		Width:  0,
-		Height: 0,
+		Width:  900,
+		Height: 700,
 	})
 	// create a TabContainer
 	tabs := container.NewAppTabs(
@@ -219,74 +192,4 @@ func main() {
 	platform.SetContent(container.NewBorder(nil, inputBoxContainer, sideMenu, nil, content))
 
 	platform.ShowAndRun()
-}
-
-// Create a new label with the message and add it to the chat window
-// The isUser parameter determines if the message is from the user or the bot
-// If the message is from the user, the bubble will be on the right side of the chat window
-// If the message is from the bot, the bubble will be on the left side of the chat window
-func addChatBubble(box *fyne.Container, message string, isUser bool) {
-
-	label := widget.NewLabel(message)
-	// Create a new chat bubble with the label
-	bubble := container.NewHBox(label)
-
-	// Set a random background color for the bubble
-	//color := color.RGBA{R: uint8(rand.Intn(256)), G: uint8(rand.Intn(256)), B: uint8(rand.Intn(256)), A: 255}
-	label.TextStyle = fyne.TextStyle{Bold: false, Italic: false, Monospace: false}
-
-	// Add the chat bubble to the card
-	if isUser {
-		// If the message is from the user, add the bubble to the right side of the card
-		box.Add(container.NewHBox(
-			layout.NewSpacer(),
-			widget.NewCard("", "", bubble),
-			&widget.Icon{
-				BaseWidget: widget.BaseWidget{},
-				Resource:   theme.CancelIcon(),
-			},
-		))
-	} else {
-		// If the message is from someone else, add the bubble to the left side of the card
-		box.Add(container.NewHBox(
-			widget.NewCard("", "", bubble),
-			layout.NewSpacer(),
-		))
-	}
-	// Wrap the container with a ScrollContainer to enable scrolling
-
-}
-
-func makeApiCall() string {
-
-	url := "https://ron-swanson-quotes.herokuapp.com/v2/quotes"
-	method := "GET"
-
-	client := &http.Client{}
-	req, err := http.NewRequest(method, url, nil)
-
-	if err != nil {
-		fmt.Println(err)
-		return ""
-	}
-	res, err := client.Do(req)
-	if err != nil {
-		fmt.Println(err)
-		return ""
-	}
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
-		if err != nil {
-
-		}
-	}(res.Body)
-
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		fmt.Println(err)
-		return ""
-	}
-	fmt.Println(string(body))
-	return string(body[1 : len(body)-1])
-
 }
