@@ -5,8 +5,8 @@ At this point it is only talking to the Ron Swanson, Quotes API.
 
 You can change endpoints by modifying the `apiCall` functions
 
+<img width="1440" alt="Screenshot 2023-03-13 at 17 06 21" src="https://user-images.githubusercontent.com/13138647/224782941-fbbff41b-3bb3-4044-a9c3-60f0a58a9a16.png">
 
-![image](https://user-images.githubusercontent.com/13138647/224311791-36185bd3-8e0f-4068-b254-556e4f61251f.png)
 
 ## Features
 - [x] Chat with API
