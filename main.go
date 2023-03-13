@@ -228,7 +228,6 @@ func main() {
 func addChatBubble(box *fyne.Container, message string, isUser bool) {
 
 	label := widget.NewLabel(message)
-	label.Wrapping = fyne.TextWrapWord
 	// Create a new chat bubble with the label
 	bubble := container.NewHBox(label)
 
