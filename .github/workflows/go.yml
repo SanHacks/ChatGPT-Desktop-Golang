@@ -28,9 +28,8 @@ jobs:
     - name: Verify Dependencies Origination
       run: go mod verify
     - name: Build Platform
-      run: go build -v ./...
-
+      run: go build
     - name: Test Chat Platform
-      run: go test -v ./...
+      run: go test
     - name: Last Check
       run: go mod why
