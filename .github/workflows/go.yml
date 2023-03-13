@@ -28,7 +28,7 @@ jobs:
     - name: Verify Dependencies Origination
       run: go mod verify
     - name: Build Platform
-      run: go build
+      run: go build -o sagacity
     - name: Test Chat Platform
       run: go test
     - name: Last Check
