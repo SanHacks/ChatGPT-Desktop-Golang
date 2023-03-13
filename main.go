@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
@@ -235,24 +236,32 @@ func addChatBubble(box *fyne.Container, message string, isUser bool) {
 	//color := color.RGBA{R: uint8(rand.Intn(256)), G: uint8(rand.Intn(256)), B: uint8(rand.Intn(256)), A: 255}
 	label.TextStyle = fyne.TextStyle{Bold: false, Italic: false, Monospace: false}
 
+	// Create a new image widget with the avatar URL
+	avatarImg := canvas.NewImageFromFile("source/avatar.jpg")
+
+	// Set the avatar image size to 64x64 pixels
+	avatarImg.SetMinSize(fyne.NewSize(64, 64))
+
+	botAvatarImg := canvas.NewImageFromFile("source/botAvatar.png")
+
+	botAvatarImg.SetMinSize(fyne.NewSize(64, 64))
 	// Add the chat bubble to the card
 	if isUser {
 		// If the message is from the user, add the bubble to the right side of the card
 		box.Add(container.NewHBox(
 			layout.NewSpacer(),
 			widget.NewCard("", "", bubble),
-			&widget.Icon{
-				BaseWidget: widget.BaseWidget{},
-				Resource:   theme.CancelIcon(),
-			},
+			botAvatarImg,
 		))
 	} else {
 		// If the message is from someone else, add the bubble to the left side of the card
 		box.Add(container.NewHBox(
+			avatarImg,
 			widget.NewCard("", "", bubble),
 			layout.NewSpacer(),
 		))
 	}
+
 	// Wrap the container with a ScrollContainer to enable scrolling
 
 }
