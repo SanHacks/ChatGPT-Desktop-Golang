@@ -27,8 +27,6 @@ jobs:
       run: go mod vendor
     - name: Verify Dependencies Origination
       run: go mod verify
-    - name: Clean up for build
-      run: go mod tidy
     - name: Build Platform
       run: go build -v ./...
 
