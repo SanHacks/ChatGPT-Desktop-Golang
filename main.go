@@ -241,6 +241,10 @@ func addChatBubble(box *fyne.Container, message string, isUser bool) {
 		box.Add(container.NewHBox(
 			layout.NewSpacer(),
 			widget.NewCard("", "", bubble),
+			&widget.Icon{
+				BaseWidget: widget.BaseWidget{},
+				Resource:   theme.CancelIcon(),
+			},
 		))
 	} else {
 		// If the message is from someone else, add the bubble to the left side of the card
