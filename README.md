@@ -20,8 +20,10 @@ This tool is made as an experiment and is not intended for production use.
 
 ## How To Install
 ### Pre-reqs
-- Golang </br>
-`brew install go`</br>
+- Golang 
+
+`brew install go`
+
 This will install the latest version of Golang on your machine </br>
 `go version`</br>
 This will show you the version of Golang installed on your machine </br>
