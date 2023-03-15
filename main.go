@@ -93,10 +93,26 @@ func main() {
 
 	// Add the chat list to the tab2 container
 	tab2 := container.NewVBox(chatList)
-	tab2.Resize(fyne.Size{
-		Width:  900,
-		Height: 700,
-	})
+	//Add media tiles to tab2
+	mediaTiles := widget.NewList(
+		func() int {
+			return len(messages1)
+		},
+		func() fyne.CanvasObject {
+			return widget.NewLabel("")
+		},
+		func(i widget.ListItemID, o fyne.CanvasObject) {
+			o.(*widget.Label).SetText(messages1[i].Sender + ": " + messages1[i].Content)
+
+		})
+
+	mediaTiles.OnSelected = func(id widget.ListItemID) {
+		//append message to chat window
+		addChatBubble(tab1, messages1[id].Sender+": "+messages1[id].Content, messages1[id].Sender == "Bot")
+	}
+	// Add the chat list to the tab2 container
+	tab2 = container.NewVBox(mediaTiles)
+
 	// create a TabContainer
 	tabs := container.NewAppTabs(
 		container.NewTabItem("Home", tab1),
@@ -106,7 +122,7 @@ func main() {
 	// Set the content of the window and show it
 	content := container.NewVBox(tabs)
 	platform := myApp.NewWindow("Sage Chatbot")
-	platform.SetContent(content)
+
 	platform.SetFixedSize(false)
 	platform.MainMenu()
 	platform.SetMaster()
@@ -114,10 +130,8 @@ func main() {
 		fmt.Println("Closed")
 	})
 	scroll := container.NewVScroll(tabs)
-	scroll.SetMinSize(tabs.MinSize())
-	// Add the ScrollContainer to the main window
 	platform.SetContent(scroll)
-	//add side menu
+	//Top Menu Bar for the application
 	platform.SetMainMenu(fyne.NewMainMenu(
 		fyne.NewMenu("File",
 			fyne.NewMenuItem("New", func() {
@@ -174,12 +188,16 @@ func main() {
 		),
 	))
 
-	myApp.Settings().SetTheme(theme.DarkTheme())
+	myApp.Settings().SetTheme(theme.LightTheme())
+
+	//Platform Settings for the application window size and position
 	platform.Resize(fyne.Size{
 		Width:  500,
 		Height: 500,
 	})
-	// Create the side menu
+
+	// Left Side Menu Bar for the application with buttons
+	//for Sign In, Sign Up, Sign Out and Settings
 	sideMenu := container.NewVBox(
 		widget.NewButton("Sign In", func() {
 			fmt.Println("Sign In")
@@ -198,7 +216,8 @@ func main() {
 		}),
 	)
 
-	//add input box
+	//Input Box for the application
+	scroll = container.NewVScroll(inputBoxContainer)
 	platform.SetContent(container.NewBorder(nil, inputBoxContainer, sideMenu, nil, content))
 
 	platform.ShowAndRun()
